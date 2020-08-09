@@ -81,7 +81,7 @@ int toDecimal(const int& val, const int& radix)//任意进制转化为10进制
     for (auto i = 0; i != strVal.size(); ++i)
     {
         decVal += charToNum(strVal[i]) * pow(radix, strVal.size() - 1 - i);
-        //decVal += (strVal[i]-'0') * pow(radix, strVal.size() - 1 - i);
+        //decVal += (strVal[i]-int('0')) * pow(radix, strVal.size() - 1 - i);
     }
 
     return decVal;
