@@ -1,0 +1,47 @@
+#include "head.h"
+
+int standardOut(const string& str, const long& res);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    long val1, val2;
+    cin >> val1 >> val2;
+
+    long res = val1 + val2;
+    long resFab = (res < 0) ? -res : res;
+    string resStr = to_string(resFab);
+
+    standardOut(resStr,res);
+#endif
+
+    return 0;
+}
+
+int standardOut(const string& str, const long& res)
+{
+    if (res < 0)
+    {
+        cout << "-";
+    }
+
+    if (str.size() <= 3)
+    {
+        cout << str;
+        return 0;
+    }
+
+    int cnt = 1;
+    int temp = str.size() % 3;
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        cout << *it;
+        if (cnt == temp || ((cnt - temp) % 3 == 0) && cnt != str.size())
+        {
+            cout << ",";
+        }
+        ++cnt;
+    }
+
+    return 0;
+}
