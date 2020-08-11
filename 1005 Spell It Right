@@ -1,0 +1,70 @@
+#include "head.h"
+
+void print(const string& str);
+
+//'0-9' 48-57
+int main(int argc, char* argv[])
+{
+#if 0
+
+#endif
+    int sum = 0;
+    string str;
+   
+    cin >> str;
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        sum += *it - '0';
+    }
+    
+    string sumStr = to_string(sum);
+    print(sumStr);
+
+    return 0;
+}
+
+void print(const string& str)
+{
+    for (auto it = str.begin(); it != str.end(); ++it)
+    {
+        switch (*it)
+        {
+        case '0':
+            cout << "zero";
+            break;
+        case '1':
+            cout << "one";
+            break;
+        case '2':
+            cout << "two";
+            break;
+        case '3':
+            cout << "three";
+            break;
+        case '4':
+            cout << "four";
+            break;
+        case '5':
+            cout << "five";
+            break;
+        case '6':
+            cout << "six";
+            break;
+        case '7':
+            cout << "seven";
+            break;
+        case '8':
+            cout << "eight";
+            break;
+        case '9':
+            cout << "nine";
+            break;
+        default:
+            break;
+        }
+        if (it != str.end() - 1)
+        {
+            cout << " ";
+        }
+    }
+}
