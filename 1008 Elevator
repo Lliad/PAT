@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>//sort
+
+using namespace std;
+
+#define UP_TIME 6
+#define DOWN_TIME 4
+#define STOP_TIME 5
+
+int calTime(const vector<int>& stopOder);
+
+int main(int argc, char* argv[])
+{
+    int allFloor = 0, temp;
+    vector<int> stopOder;
+
+    cin >> allFloor;
+    for (int i = 0; i != allFloor; ++i)
+    {
+        cin >> temp;
+        stopOder.push_back(temp);
+    }
+
+    cout << calTime(stopOder);
+    return 0;
+}
+
+int calTime(const vector<int>& stopOder)
+{
+    int allTime = 0;
+    int currFloor = 0;
+
+    for (auto& i : stopOder)
+    {
+        if (i > currFloor)
+        {
+            allTime += (i - currFloor) * UP_TIME + STOP_TIME;
+        }
+        if (i == currFloor)
+        {
+            allTime += STOP_TIME;
+        }
+        if (i < currFloor)
+        {
+            allTime += (currFloor - i) * DOWN_TIME + STOP_TIME;
+        }
+        currFloor = i;
+    }
+
+    return allTime;
+}
