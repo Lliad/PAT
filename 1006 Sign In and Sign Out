@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct user
+{
+	string id;
+
+	string logInTime, logOutTime;
+};
+
+void init(vector<user>& users);
+void unlockUser(const vector<user>& users);
+void lockUser(const vector<user>& users);
+
+int main(int argc, char* argv[])
+{
+    int userNum;
+    cin >> userNum;
+
+    vector<user> users(userNum);
+    init(users);
+
+    unlockUser(users);
+    cout << " ";
+    lockUser(users);
+
+    return 0;
+}
+
+void init(vector<user>& users)
+{
+    string uId = "";
+    string logIn, logOut;
+    for (auto& i : users)
+    {
+        cin >> uId >> logIn >> logOut;
+        i.id = uId;
+        i.logInTime = logIn;
+        i.logOutTime = logOut;
+    }
+}
+
+void unlockUser(const vector<user>& users)
+{
+    string tempUserId = " ";
+    string tempTime = "23:59:59";
+
+    for (auto& i : users)
+    {
+        if (i.logInTime < tempTime)
+        {
+            tempTime = i.logInTime;
+            tempUserId = i.id;
+        }
+    }
+
+    cout << tempUserId;
+}
+
+void lockUser(const vector<user>& users)
+{
+    string tempUserId = " ";
+    string tempTime = "00:00:00";
+
+    for (auto& i : users)
+    {
+        if (i.logOutTime > tempTime)
+        {
+            tempTime = i.logOutTime;
+            tempUserId = i.id;
+        }
+    }
+
+    cout << tempUserId;
+}
