@@ -120,7 +120,69 @@ bool compare(subSeq seq1, subSeq seq2)
     return seq1.lenth > seq2.lenth;
 }
 
+/* right answer */
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>//sort
 
+using namespace std;
+
+#define MAX 100000000
+
+int main(int argc, char* argv[])
+{
+    int seqLen, temp;
+    cin >> seqLen;
+
+    bool nonPos = true;
+    vector<int> seq;
+    for (int i = 0; i != seqLen; ++i)
+    {
+        cin >> temp;
+        seq.push_back(temp);
+        if (temp >= 0)
+        {
+            nonPos = false;
+        }
+    }
+
+    int maxSum = -MAX, maxStart = 0, maxFin = 0;
+    int currSum = 0, currStart;
+    int reset = 1;
+    for (auto i = 0; i < seqLen; ++i)
+    {
+        if (reset)
+        {
+            currStart = i;
+            currSum = 0;
+            reset = 0;
+        }
+
+        currSum += seq[i];
+        if (currSum < 0)
+        {
+            reset = 1;
+        }
+        if (currSum > maxSum)
+        {
+            maxSum = currSum;
+            maxStart = currStart;
+            maxFin = i;
+        }
+    }
+    
+    if (nonPos)
+    {
+        cout << 0 << " " << seq[0] << " " << seq[seqLen - 1];
+    }
+    else
+    {
+        cout << maxSum << " " << seq[maxStart] << " " << seq[maxFin];
+    }
+    
+    return 0;
+}
 
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
