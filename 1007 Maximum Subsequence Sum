@@ -1,0 +1,135 @@
+// ConsoleApplication1.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+//
+#include "head.h"
+
+bool check(const vector<int>& sqe);
+void initSub(vector<subSeq>& sub, const int& sqeLen);
+void calLenth(vector<subSeq>& sub, const vector<int>& sqe);
+bool compare(subSeq seq1, subSeq seq2);
+
+int main(int argc, char* argv[])
+{
+#if 0
+
+#endif
+    int sqeLen, temp;
+    cin >> sqeLen;
+
+    vector<int> sqe;
+    for (int i = 0; i != sqeLen; ++i)
+    {
+        cin >> temp;
+        sqe.push_back(temp);
+    }
+
+    if (check(sqe))
+    {
+        /*
+        vector<subSeq> sub;
+        initSub(sub, sqeLen);
+
+        calLenth(sub, sqe);
+        sort(sub.begin(), sub.end(), compare);
+        cout << sub[0].lenth << " " << sqe[sub[0].startId] << " " << sqe[sub[0].finId];
+        */
+        int maxLen = -1, currLen = 0;
+        int maxStart = 0, maxFin = 0, currStart = 0;;
+        int reset = 1;
+        for (auto i = 0; i != sqe.size(); ++i)
+        {
+            if (reset)
+            {
+                currStart = i;
+                currLen = 0;
+                reset = 0;
+            }
+
+            currLen += sqe[i];
+            if (currLen < 0)
+            {
+                reset = 1;
+            }
+            if (currLen > maxLen)
+            {
+                maxLen = currLen;
+                maxStart = currStart;
+                maxFin = i;
+            }
+        }
+        cout << maxLen << " " << sqe[maxStart] << " " << sqe[maxFin];
+    }
+    
+    return 0;
+}
+
+bool check(const vector<int>& sqe)
+{
+    for (auto& i : sqe)
+    {
+        if (i > 0)
+        {
+            return true;
+        }
+    }
+    cout << 0 << " " << sqe[0] << " " << sqe[sqe.size() - 1];
+    return false;
+}
+
+void initSub(vector<subSeq>& sub, const int& sqeLen)
+{
+    subSeq temp;
+    for (int i = 0; i != sqeLen; ++i)
+    {
+        temp.startId = i;
+        for (int j = i; j != sqeLen; ++j)
+        {
+            temp.finId = j;
+            sub.push_back(temp);
+        }
+    }
+}
+void calLenth(vector<subSeq>& sub, const vector<int>& sqe)
+{
+    int tempLen = 0;
+    int tempStart, tempFin;
+    for (auto& i : sub)
+    {
+        tempStart = i.startId;
+        tempFin = i.finId;
+        if (tempStart == tempFin)
+        {
+            i.lenth = sqe[tempStart];
+            continue;
+        }
+        for (auto idx = tempStart; idx != tempFin + 1; ++idx)
+        {
+            tempLen += sqe[idx];
+        }
+        i.lenth = tempLen;
+        tempLen = 0;
+    }
+}
+
+bool compare(subSeq seq1, subSeq seq2)
+{
+    if (seq1.lenth == seq2.lenth)
+    {
+        return seq1.startId < seq2.startId;
+    }
+
+    return seq1.lenth > seq2.lenth;
+}
+
+
+
+
+// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
+// 调试程序: F5 或调试 >“开始调试”菜单
+
+// 入门使用技巧: 
+//   1. 使用解决方案资源管理器窗口添加/管理文件
+//   2. 使用团队资源管理器窗口连接到源代码管理
+//   3. 使用输出窗口查看生成输出和其他消息
+//   4. 使用错误列表窗口查看错误
+//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
+//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
