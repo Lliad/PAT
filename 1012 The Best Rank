@@ -1,0 +1,188 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <algorithm>//sort
+
+using namespace std;
+
+struct student {
+	string id;
+	int gradeC, gradeM, gradeE, gradeA;
+
+	int currRank;
+	int bestRank;
+
+	char course = 'A';
+};
+
+int ave(const student& stu);
+bool compareC(const student& stu1, const student& stu2);
+bool compareM(const student& stu1, const student& stu2);
+bool compareE(const student& stu1, const student& stu2);
+bool compareA(const student& stu1, const student& stu2);
+void getCRank(vector<student>& stu);
+void getMRank(vector<student>& stu);
+void getERank(vector<student>& stu);
+void getARank(vector<student>& stu);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    int stuNum, chkNum;
+    cin >> stuNum >> chkNum;
+    
+
+    student temp;
+    vector<student> stu;
+    for (auto i = 0; i != stuNum; ++i)
+    {
+        cin >> temp.id >> temp.gradeC >> temp.gradeM >> temp.gradeE;
+        temp.gradeA = ave(temp);
+        stu.push_back(temp);
+    }
+
+    getARank(stu);
+    getCRank(stu);
+    getMRank(stu);
+    getERank(stu);
+
+    for (auto i = 0; i != chkNum; ++i)
+    {
+        cin >> temp.id;
+        for (int j = 0; j != stuNum; ++j)
+        {
+            if (temp.id == stu[j].id)
+            {
+                cout << stu[j].bestRank + 1 << " " << stu[j].course;
+                break;
+            }
+            if (j == stuNum - 1)
+            {
+                cout << "N/A";
+            }
+        }
+        if (i != chkNum)
+        {
+            cout << endl;
+        }
+    }
+
+#endif
+    return 0;
+}
+
+int ave(const student& stu)
+{
+    int temp = stu.gradeC + stu.gradeE + stu.gradeM;
+    
+    if ((temp % 3) >= 2)
+    {
+        return temp / 3 + 1;
+    }
+    return temp / 3;
+}
+
+bool compareC(const student& stu1, const student& stu2)
+{
+    return stu1.gradeC > stu2.gradeC;
+}
+
+bool compareM(const student& stu1, const student& stu2)
+{
+    return stu1.gradeM > stu2.gradeM;
+}
+
+bool compareE(const student& stu1, const student& stu2)
+{
+    return stu1.gradeE > stu2.gradeE;
+}
+
+bool compareA(const student& stu1, const student& stu2)
+{
+    return stu1.gradeA > stu2.gradeA;
+}
+
+void getCRank(vector<student>& stu)
+{
+    sort(stu.begin(), stu.end(), compareC);
+    for (auto i = 0; i != stu.size(); ++i)
+    {
+        if ((i != 0) && (stu[i].gradeC == stu[i - 1].gradeC))
+        {
+            stu[i].currRank = i - 1;
+        }
+        else
+        {
+            stu[i].currRank = i;
+        }
+
+        if (stu[i].currRank < stu[i].bestRank)
+        {
+            stu[i].bestRank = stu[i].currRank;
+            stu[i].course = 'C';
+        }
+    }
+}
+
+void getMRank(vector<student>& stu)
+{
+    sort(stu.begin(), stu.end(), compareM);
+    for (auto i = 0; i != stu.size(); ++i)
+    {
+        if ((i != 0) && (stu[i].gradeM == stu[i - 1].gradeM))
+        {
+            stu[i].currRank = i - 1;
+        }
+        else
+        {
+            stu[i].currRank = i;
+        }
+
+        if (stu[i].currRank < stu[i].bestRank)
+        {
+            stu[i].bestRank = stu[i].currRank;
+            stu[i].course = 'M';
+        }
+    }
+}
+
+void getERank(vector<student>& stu)
+{
+    sort(stu.begin(), stu.end(), compareE);
+    for (auto i = 0; i != stu.size(); ++i)
+    {
+        if ((i != 0) && (stu[i].gradeE == stu[i - 1].gradeE))
+        {
+            stu[i].currRank = i - 1;
+        }
+        else
+        {
+            stu[i].currRank = i;
+        }
+
+        if (stu[i].currRank < stu[i].bestRank)
+        {
+            stu[i].bestRank = stu[i].currRank;
+            stu[i].course = 'E';
+        }
+    }
+}
+
+void getARank(vector<student>& stu)
+{
+    sort(stu.begin(), stu.end(), compareA);
+    for (auto i = 0; i != stu.size(); ++i)
+    {
+        if ((i != 0) && (stu[i].gradeA == stu[i - 1].gradeA))
+        {
+            stu[i].currRank = i - 1;
+            stu[i].bestRank = i - 1;
+        }
+        else
+        {
+            stu[i].currRank = i;
+            stu[i].bestRank = i;
+        }
+    }
+}
