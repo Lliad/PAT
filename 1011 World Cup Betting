@@ -1,0 +1,76 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <algorithm>//sort
+
+using namespace std;
+
+struct Game {
+	float win;
+	float tie;
+	float lose;
+};
+
+#define GAME_NUM 3
+#define PORFIT 0.65
+
+vector<string> gameRes = { "W","T","L" };
+
+int maxProfit(const Game& game);//返回下标，0=win，1=tie，2=lose
+
+int main(int argc, char* argv[])
+{
+#if 1
+    vector<int> res;
+    vector<Game> gameMap(GAME_NUM);
+    for (auto& i : gameMap)
+    {
+        cin >> i.win >> i.tie >> i.lose;
+        res.push_back(maxProfit(i));
+    }
+
+    float profit = 0, prob = 1;
+    for (auto i = 0; i != GAME_NUM; ++i)
+    {
+        if (res[i] == 0)
+        {
+            prob *= gameMap[i].win;
+        }
+        if (res[i] == 1)
+        {
+            prob *= gameMap[i].tie;
+        }
+        if (res[i] == 2)
+        {
+            prob *= gameMap[i].lose;
+        }
+        cout << gameRes[res[i]] << " ";
+    }
+    profit = (prob * PORFIT - 1) * 2;
+
+    cout << fixed << setprecision(2) << profit;
+
+#endif
+
+    return 0;
+}
+
+int maxProfit(const Game& game)
+{
+    float temp = (game.win > game.tie) ? game.win : game.tie;
+    if (temp < game.lose)
+    {
+        return 2;
+    }
+
+    if (temp == game.win)
+    {
+        return 0;
+    }
+    if (temp == game.tie)
+    {
+        return 1;
+    }
+
+}
