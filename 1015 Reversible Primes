@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+
+using namespace std;
+
+struct Data {
+    long long decval;
+    int radix;
+};
+
+long long toDecimal(const vector<int>& vecVal, const int& radix);
+bool isPrime(const long long& val);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    Data temp;
+    vector<Data> input;
+    while (true)
+    {
+        cin >> temp.decval;
+        if (temp.decval <= 0)
+        {
+            break;
+        }
+        cin >> temp.radix;
+        input.push_back(temp);
+    }
+
+    for (auto& i : input)
+    {
+        if (isPrime(i.decval))
+        {
+            int temp = i.decval;
+            vector<int> vecVal;
+            while (temp)
+            {
+                vecVal.push_back(temp % i.radix);
+                temp = temp / i.radix;
+            }
+            if (isPrime(toDecimal(vecVal, i.radix)))
+            {
+                cout << "Yes" << endl;
+            }
+            else
+            {
+                cout << "No" << endl;
+            }
+        }
+        else
+        {
+            cout << "No" << endl;
+        }
+    }
+#endif
+    return 0;
+}
+
+long long toDecimal(const vector<int>& vecVal, const int& radix)
+{
+    long long decVal = 0;
+    for (auto i = 0; i != vecVal.size(); ++i)
+    {
+        decVal += vecVal[i] * pow(radix, vecVal.size() - 1 - i);
+    }
+
+    return decVal;
+}
+
+bool isPrime(const long long& val)
+{
+    if(val==1)
+    {
+        return false;
+    }
+    int idx = sqrt(val);
+    for (int i = 2; i != idx+1; ++i)
+    {
+        if (val % i == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
