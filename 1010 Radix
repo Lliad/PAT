@@ -1,103 +1,87 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>//sort
 #include <cmath>
 
-#include "head.h"
+using namespace std;
 
-int charToNum(const char &ch);
-int toDecimal(const int& val, const int& radix);
-int findRadix(const int& val, const int& decVal);
+#define MAX_RADIX 1000
+
+int charToNum(const char& ch);
+long long toDecimal(const string& strVal, const long long& radix);
+int findRadix(const string& strVal, const long long& decVal);
+bool compare(char ch1, char ch2);
+
 
 int main(int argc, char* argv[])
 {
-#if 0
-    int val1 = 10, val2 = 100;
-    int* ptr = &val2;
-    int arr[10] = { 1,1,2,2,3,3,4,4,5,5, };
+#if 1
+    long long tag, radix;
+    string strVal1, strVal2;
+    cin >> strVal1 >> strVal2 >> tag >> radix;
 
-    print(arr);
-
-    cout << compare(val1, ptr);
-
-    string str1 = argv[1], str2 = argv[2];
-    cout << str1 + str2 << endl;
-
-    initializer_list<int> list = { 1,2,3,4,5,6,7,8,9,10 };
-    cout << addList(list);
-#endif
-    //cout << fact(5);
-    int val1, val2, tag, radix;
-    cin >> val1 >> val2 >> tag >> radix;
-
+    int finRadix = 0;
     if (tag == 1)
     {
-        cout << findRadix(val2, toDecimal(val1, radix));
+        finRadix = findRadix(strVal2, toDecimal(strVal1, radix));
     }
     if (tag == 2)
     {
-        cout << findRadix(val1, toDecimal(val2, radix));
+        finRadix = findRadix(strVal1, toDecimal(strVal2, radix));
     }
 
+    if (finRadix)
+    {
+        cout << finRadix;
+    }
+    else
+    {
+        cout << "Impossible";
+    }
+#endif
 
     return 0;
 }
 
-int charToNum(const char &ch)
+int charToNum(const char& ch)
 {
-    switch (ch)
+    if (ch >= '0' && ch <= '9')
     {
-    case '1':
-        return 1;
-    case '2':
-        return 2;
-    case '3':
-        return 3;
-    case '4':
-        return 4;
-    case '5':
-        return 5;
-    case '6':
-        return 6;
-    case '7':
-        return 7;
-    case '8':
-        return 8;
-    case '9':
-        return 9;
-    case '0':
-        return 0;
-    default:
-        break;
+        return ch - '0';
+    }
+    else
+    {
+        return ch - 'a' + 10;
     }
 }
 
-int toDecimal(const int& val, const int& radix)//任意进制转化为10进制
+long long toDecimal(const string& strVal, const long long& radix)//任意进制转化为10进制
 {
-    if (radix == 10)
-    {
-        return val;
-    }
-
-    string strVal = to_string(val);
-    int decVal = 0;
+    long long decVal = 0;
     for (auto i = 0; i != strVal.size(); ++i)
     {
-        decVal += charToNum(strVal[i]) * pow(radix, strVal.size() - 1 - i);
-        //decVal += (strVal[i]-int('0')) * pow(radix, strVal.size() - 1 - i);
+        decVal += charToNum(strVal[i]) * powl(radix, strVal.size() - 1 - i);
     }
-
     return decVal;
-
 }
 
-int findRadix(const int& val, const int& decVal)
+bool compare(char ch1, char ch2)
 {
-    for (int i = 2; i != 11; ++i)
+    return ch1 > ch2;
+}
+
+int findRadix(const string& strVal, const long long& decVal)
+{
+    string str = strVal;
+    sort(str.begin(), str.end(), compare);
+
+    for (int i = charToNum(str[0]) + 1; i != MAX_RADIX; ++i)
     {
-        if (decVal == toDecimal(val, i))
+        if (decVal == toDecimal(strVal, i))
         {
             return i;
         }
     }
-
-    cout << "fail to find the radix" << endl;
-    return -1;
+    return 0;
 }
