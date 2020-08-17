@@ -161,7 +161,20 @@ double calBill(const int& sday, const int& shour, const int& smin,
         inAday = false;
     }
 
-    /* 先处理通话在一天之内进行的情况 */
+    /* 判断是否在同一个小时之内 */
+    bool inAhour = false;
+    if ((shour == ehour) && inAday)
+    {
+        inAhour = true;
+    }
+    /* 处理通话在同一小时之间进行的情况 */
+    if (inAhour)
+    {
+        cout << emin - smin << " ";
+        return ((emin - smin) * toll[shour]) / 100.0;
+    }
+
+    /* 处理通话在一天之内,但不同小时进行的情况 */
     if (inAday)
     {
         int thour = shour;
@@ -198,6 +211,3 @@ double calBill(const int& sday, const int& shour, const int& smin,
     bill += (emin - 0.0) * toll[ehour];
     return bill / 100.0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
