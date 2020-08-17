@@ -1,0 +1,203 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>//sort
+
+using namespace std;
+
+#define HOURS 24
+#define OFF "off-line"
+#define ON "on-line"
+
+struct record {
+	string userId;
+	string time;
+	string state;
+};
+
+bool com(const record& re1, const record& re2);
+int charToNum(const char& ch);
+int toTime(const string::iterator begin, const string::iterator end);
+void init(vector<record>& rList, const int& reNum);
+double calBill(const int& sday, const int& shour, const int& smin, 
+    const int& eday, const int& ehour, const int& emin, const vector<int>& toll);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    int temp, reNum;
+    vector<int> toll;
+    for (int i = 0; i != HOURS; ++i)
+    {
+        cin >> temp;
+        toll.push_back(temp);
+    }
+
+    cin >> reNum;
+    vector<record> rList;
+    init(rList, reNum);
+
+    string currUser = " ", stime = " ";
+    int state = 0;//off-line
+    int day = 0, hour = 0, min = 0;
+    double bill = 0;
+    bool firstCall = true;
+    for (auto it = rList.begin(); it != rList.end(); ++it)
+    {
+        /* 处理新用户 */
+        if (it->userId != currUser)
+        {
+            currUser = it->userId;//将新用户置为当前用户
+            state = 0;//默认初始用户未通话
+            bill = 0;
+            stime = " ";
+            day = 0, hour = 0, min = 0;
+            firstCall = true;
+        }
+
+        /* 处理当前用户 */
+        if ((it->userId == currUser) && (it->state == ON))//当前用户即将进行新的通话
+        {
+            if (it->time > stime)//应当将通话开始时间更新为当前时间
+            {
+                stime = it->time;
+                day = toTime(it->time.begin() + 3, it->time.end() - 6);
+                hour = toTime(it->time.begin() + 6, it->time.end() - 3);
+                min = toTime(it->time.begin() + 9, it->time.end());
+            }
+            state = 1;
+        }
+        if ((it->userId == currUser) && (state == 1) && (it->state == OFF) && (it->time > stime))//当前用户挂掉电话下线
+        {
+            state = 0;//状态置为off-line
+            if (firstCall)
+            {
+                cout << it->userId << " " << it->time.substr(0, 2) << endl;
+                firstCall = false;
+            }
+            /* 输出本次通话开始以及结束时间 */
+            cout << stime.substr(3, 8) << " ";
+            cout << it->time.substr(3, 8) << " ";
+
+            /* 计算本次通话时长以及费用 */
+            double tempBill = calBill(day, hour, min, toTime(it->time.begin() + 3, it->time.end() - 6),
+                toTime(it->time.begin() + 6, it->time.end() - 3), toTime(it->time.begin() + 9, it->time.end()),
+                toll);
+            cout << "$" << fixed << setprecision(2) << tempBill << endl;
+            bill += tempBill;
+        }
+        if ((it <= rList.end() - 2) && ((it->userId) != (it + 1)->userId))//即将处理新用户，输出当前用户的账单
+        {
+            if (!firstCall)
+            {
+                cout << "Total amount: $" << fixed << setprecision(2) << bill << endl;
+            }
+        }
+        if (it== rList.end() - 1)//输出最后一个用户的账单
+        {
+            if (!firstCall)
+            {
+                cout << "Total amount: $" << fixed << setprecision(2) << bill << endl;
+            }
+        }
+        if ((it->userId == currUser) && (state == 0) && (it->state == OFF))//当前用户 不在通话中 挂掉了电话
+        {
+            continue;
+        }
+    }
+#endif
+    return 0;
+}
+
+bool com(const record& re1, const record& re2)
+{
+    if (re1.userId != re2.userId)
+    {
+        return re1.userId < re2.userId;
+    }
+    return re1.time < re2.time;
+}
+
+void init(vector<record>& rList, const int& reNum)
+{
+    record tre;
+    for (int i = 0; i != reNum; ++i)
+    {
+        cin >> tre.userId >> tre.time >> tre.state;
+        rList.push_back(tre);
+    }
+    sort(rList.begin(), rList.end(), com);
+}
+
+int charToNum(const char& ch)
+{
+    return ch - '0';
+}
+
+int toTime(const string::iterator begin, const string::iterator end)
+{
+    int time = 0;
+    int lenth = end - begin;
+    for (auto i = 0; i != lenth; ++i)
+    {
+        time += charToNum(*(begin + i)) * pow(10, lenth - 1 - i);
+    }
+
+    return time;
+}
+
+double calBill(const int& sday, const int& shour, const int& smin,
+    const int& eday, const int& ehour, const int& emin, const vector<int>& toll)
+{
+    int callTime = (60 - smin);
+    double bill = (60.0 - smin) * toll[shour];
+
+    /* 先判断通话是否在一天之内进行 */
+    bool inAday = true;
+    if (sday != eday)
+    {
+        inAday = false;
+    }
+
+    /* 先处理通话在一天之内进行的情况 */
+    if (inAday)
+    {
+        int thour = shour;
+        while (thour != (ehour - 1))
+        {
+            bill += toll[++thour] * 60.0;
+            callTime += 60;
+        }
+    }
+    else/* 处理多天间的通话 */
+    {
+        int tday = sday, thour = shour;
+        while (tday != eday)
+        {
+            while (thour != 23)
+            {
+                bill += 60.0 * toll[++thour];
+                callTime += 60;
+            }
+            thour = -1;
+            if ((++tday) == eday)
+            {
+                break;
+            }
+        }
+        while (thour != (ehour - 1))
+        {
+            bill += 60.0 * toll[++thour];
+            callTime += 60;
+        }
+    }
+
+    cout << callTime + emin << " ";
+    bill += (emin - 0.0) * toll[ehour];
+    return bill / 100.0;
+}
+
+// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
+// 调试程序: F5 或调试 >“开始调试”菜单
