@@ -1,0 +1,93 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>//sort
+
+using namespace std;
+
+string doubleVec(const string& val);
+void cntNum(const string& strv, vector<int>& cnt);
+bool isEqual(const vector<int>& vec1, const vector<int>& vec2);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    string val, dval;
+    cin >> val;
+
+    vector<int> cnt1(10), cnt2(10);
+    dval = doubleVec(val);
+    cntNum(val, cnt1);
+    cntNum(dval, cnt2);
+
+    if (isEqual(cnt1, cnt2))
+    {
+        cout << "Yes" << endl;
+    }
+    else
+    {
+        cout << "No" << endl;
+    }
+    cout << dval;
+#endif
+}
+
+string doubleVec(const string& val)
+{
+    string tval = val;
+    reverse(tval.begin(), tval.end());
+
+    int flag = 0;//一开始没有进位
+    for (size_t i = 0; i != tval.size(); ++i)
+    {
+        if (flag)
+        {
+            tval[i] = ((tval[i] - '0') * 2 + 1) + '0';
+        }
+        else
+        {
+            tval[i] = (tval[i] - '0') * 2 + '0';
+        }
+        if ((i != tval.size() - 1) && (tval[i] - '0') > 9)
+        {
+            tval[i] = (tval[i] - '0') % 10 + '0';
+            flag = 1;
+        }
+        else
+        {
+            flag = 0;
+        }
+
+        if ((i == tval.size() - 1) && ((tval[i] - '0') > 9))
+        {
+            tval[i] = (tval[i] - '0') % 10 + '0';
+            tval.push_back('1');
+            break;
+        }
+    }
+
+    reverse(tval.begin(), tval.end());
+    return tval;
+}
+
+void cntNum(const string& strv, vector<int>& cnt)
+{
+    for (auto it = strv.begin(); it != strv.end(); ++it)
+    {
+        ++cnt[(*it) - '0'];
+    }
+}
+
+bool isEqual(const vector<int>& vec1, const vector<int>& vec2)
+{
+    for (size_t i = 0; i != vec1.size(); ++i)
+    {
+        if (vec1[i] != vec2[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
