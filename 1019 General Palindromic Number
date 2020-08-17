@@ -1,0 +1,58 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <algorithm>//sort
+
+using namespace std;
+
+typedef long long LL;
+
+bool isReverse(const vector<LL>& vec);
+
+int main(int argc, char* argv[])
+{
+#if 1
+    LL decval, radix;
+    cin >> decval >> radix;
+
+    vector<LL> reverseVal;
+    while (decval)
+    {
+        reverseVal.push_back(decval % radix);
+        decval /= radix;
+    }
+
+    if (isReverse(reverseVal))
+    {
+        cout << "Yes" << endl; 
+    }
+    else
+    {
+        cout << "No" << endl;
+    }
+    for (auto it = reverseVal.end() - 1; it != reverseVal.begin(); --it)
+    {
+        cout << *it << " ";
+    }
+    cout << *(reverseVal.begin());
+#endif
+
+    return 0;
+}
+
+bool isReverse(const vector<LL>& vec)
+{
+    if (vec.size() >= 2)
+    {
+        for (auto it1 = vec.begin(), it2 = vec.end() - 1; it1 <= it2; ++it1, --it2)
+        {
+            if ((*it1) != (*it2))
+            {
+                return false;
+            }
+        }
+    }
+    return true; 
+}
