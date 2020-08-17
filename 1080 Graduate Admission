@@ -1,0 +1,160 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+#include <vector>
+#include <cstddef>//for size_t
+#include <iterator>//for begin() and end()
+#include <algorithm>
+
+using namespace std;
+
+struct Applicant {
+    int id;
+    int gradeE = 0, gradeI = 0;
+    double finalGrade = 0;
+
+    int rank;
+
+    vector<int> idealSchool;
+};
+
+struct School {
+    int schoolId;
+    int stuCnt = 0;
+    int quota;
+
+    vector<int> acceptStu;
+};
+
+void initSchool(vector<School>& school);
+void initStu(vector<Applicant>& stu, const int& appNum, const int& choiceNum);
+void giveRank(vector<Applicant>& stu);
+void printRes(vector<School>& school);
+
+void findSchool(vector<School>& school, vector<Applicant>& stu, const int& choiceNum);
+
+bool compare1(Applicant app1, Applicant app2);
+bool compare2(int val1, int val2);
+
+int main()
+{
+#if 1
+    int appNum;
+    int schoolNum, choiceNum;
+    cin >> appNum >> schoolNum >> choiceNum;
+
+    vector<School> school(schoolNum);
+    initSchool(school);
+
+    vector<Applicant> stu;
+    initStu(stu, appNum, choiceNum);
+    sort(stu.begin(), stu.end(), compare1);
+    giveRank(stu);
+
+    findSchool(school, stu, choiceNum);
+
+    for (auto& i : school)
+    {
+        sort(i.acceptStu.begin(), i.acceptStu.end(), compare2);
+    }
+    printRes(school);
+#endif
+    return 0;
+}
+
+void initSchool(vector<School>& school)
+{
+    int quota = 0;
+    for (int i = 0; i != school.size(); ++i)
+    {
+        cin >> quota;
+        school[i].schoolId = i;
+        school[i].quota = quota;
+    }
+}
+
+void initStu(vector<Applicant>& stu, const int& appNum, const int& choiceNum)
+{
+    int temp = 0;
+    Applicant tstu;
+    for (int i = 0; i != appNum; ++i)
+    {
+        tstu.id = i;
+        cin >> tstu.gradeE >> tstu.gradeI;
+        tstu.finalGrade = (tstu.gradeE + tstu.gradeI);
+        for (int j = 0; j != choiceNum; ++j)
+        {
+            cin >> temp;
+            tstu.idealSchool.push_back(temp);
+        }
+        stu.push_back(tstu);
+        tstu.idealSchool.clear();
+    }
+}
+
+bool compare1(Applicant app1, Applicant app2)
+{
+    return (app1.finalGrade == app2.finalGrade) ? (app1.gradeE > app2.gradeE) : (app1.finalGrade > app2.finalGrade);
+}
+
+bool compare2(int val1, int val2)
+{
+    return val1 < val2;
+}
+
+void giveRank(vector<Applicant>& stu)
+{
+    for (int i = 0; i != stu.size(); ++i)
+    {
+        stu[i].rank = i;
+        if ((i != 0) && (stu[i].finalGrade == stu[i - 1].finalGrade) && (stu[i]).gradeE == stu[i - 1].gradeE)
+        {
+            stu[i].rank = stu[i - 1].rank;
+        }
+    }
+}
+
+void printRes(vector<School>& school)
+{
+    for (auto it = school.begin(); it != school.end(); ++it)
+    {
+        for (auto it2 = it->acceptStu.begin(); it2 != it->acceptStu.end(); ++it2)
+        {
+            if (it2 != it->acceptStu.end() - 1)
+            {
+                cout << *it2 << " ";
+            }
+            else
+            {
+                cout << *it2;
+            }
+        }
+        cout << endl;
+    }
+}
+
+void findSchool(vector<School>& school, vector<Applicant>& stu, const int& choiceNum)
+{
+    for (auto it = stu.begin(); it != stu.end(); ++it)
+    {
+        for (int i = 0; i != choiceNum; ++i)
+        {
+            int tempSchoolNum = it->idealSchool[i];
+            if (school[tempSchoolNum].stuCnt < school[tempSchoolNum].quota)
+            {
+                school[tempSchoolNum].acceptStu.push_back(it->id);
+                ++school[tempSchoolNum].stuCnt;
+                break;
+            }
+            else
+            {
+                int lastAcceptStu = school[tempSchoolNum].acceptStu.back();
+                if (it->rank == stu[lastAcceptStu].rank)
+                {
+                    school[tempSchoolNum].acceptStu.push_back(it->id);
+                    break;
+                }
+            }
+        }
+    }
+}
