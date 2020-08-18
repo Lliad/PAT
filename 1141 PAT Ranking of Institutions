@@ -1,0 +1,123 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstddef>//for size_t
+#include <iterator>//for begin() and end()
+#include <algorithm>
+
+using namespace std;
+
+typedef long long int LL;
+
+struct Student {
+    string stuId, school;
+    int score;
+};
+
+struct School {
+    string schId = " ";
+    int tScore = 0;
+    int rank, stuNum = 0;
+};
+
+bool compare1(const Student& stu1, const Student& stu2);
+bool compare2(const School& sch1, const School& sch2);
+
+int main()
+{
+#if 1
+    LL stuNum;
+    cin >> stuNum;
+
+    Student tstu;
+    vector<Student> stu;
+    for (int i = 0; i != stuNum; ++i)
+    {
+        cin >> tstu.stuId >> tstu.score >> tstu.school;
+        for (size_t j = 0; j != tstu.school.size(); ++j)
+        {
+            tstu.school[j] = tolower(tstu.school[j]);
+        }
+        stu.push_back(tstu);
+    }
+    sort(stu.begin(), stu.end(), compare1);/* 按照学校名称，A B T顺序等级进行排序 */
+
+    School currSch;
+    vector<School> sch;
+    double tScore=0.0;
+    for (auto it = stu.begin(); it != stu.end(); ++it)
+    {
+        if (it->school != currSch.schId)/* 遇见新的学校 */
+        {
+            currSch.schId = it->school;
+            currSch.stuNum = 0;
+            tScore=0.0;
+            currSch.tScore = 0;
+        }
+
+        /* 处理同一个学校中的每个学生的分数 */
+        if (it->stuId[0] == 'A')
+        {
+            tScore += it->score;
+        }
+        if (it->stuId[0] == 'B')
+        {
+            tScore += it->score / 1.5;
+        }
+        if (it->stuId[0] == 'T')
+        {
+            tScore += it->score * 1.5;
+        }
+        ++currSch.stuNum;
+
+        if ((it != stu.end() - 1) && ((it + 1)->school != currSch.schId))/* 遇到该校最后一个学生 */
+        {
+            currSch.tScore = tScore;
+            sch.push_back(currSch);
+        }
+        if (it == stu.end() - 1)/* 处理最后一个学生 */
+        {
+            currSch.tScore = tScore;
+            sch.push_back(currSch);
+        }
+    }
+    sort(sch.begin(), sch.end(), compare2);/* 根据总分排序 */
+    for (size_t i = 0; i != sch.size(); ++i)/* 分配并调整排名 */
+    {
+        sch[i].rank = i;
+        if ((i != 0) && (sch[i].tScore == sch[i - 1].tScore))
+        {
+            sch[i].rank = sch[i - 1].rank;
+        }
+    }
+
+    cout << sch.size() << endl;
+    for (auto& i : sch)
+    {
+        cout << i.rank + 1 << " " << i.schId << " " << i.tScore << " " << i.stuNum << endl;
+    }
+#endif
+    return 0;
+}
+
+bool compare1(const Student& stu1, const Student& stu2)
+{
+    if (stu1.school == stu2.school)
+    {
+        return stu1.stuId < stu2.stuId;
+    }
+    return stu1.school < stu2.school;
+}
+
+bool compare2(const School& sch1, const School& sch2)
+{
+    if (sch1.tScore == sch2.tScore)
+    {
+        if (sch1.stuNum == sch2.stuNum)
+        {
+            return sch1.schId < sch2.schId;
+        }
+        return sch1.stuNum < sch2.stuNum;
+    }
+    return sch1.tScore > sch2.tScore;
+}
