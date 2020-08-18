@@ -1,0 +1,204 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cstddef>
+
+using namespace std;
+
+struct record {
+	int score;
+	string info;
+	string level, site, date, id;
+};
+
+struct siteCnt {
+	string site = " ";
+	int cnt = 0;
+};
+
+bool compare1(const record& r1, const record& r2);
+bool compare2(const record& r1, const record& r2);
+bool compare3(const record& r1, const record& r2);
+bool compare4(const siteCnt& site1, const siteCnt& site2);
+void print1(vector<record>& rList, const string& term);
+void print2(vector<record>& rList, const string& term);
+void print3(vector<record>& rList, const string& term);
+
+int main(int argc, char* argv[])
+{
+#if 1
+	int infoNum, reqNum, caseCnt = 1;
+	std::cin >> infoNum >> reqNum;
+
+	record trecord;
+	vector<record> rList;
+	for (int i = 0; i != infoNum; ++i)
+	{
+		std::cin >> trecord.info >> trecord.score;
+		trecord.level = trecord.info.substr(0, 1);
+		trecord.site = trecord.info.substr(1, 3);
+		trecord.date = trecord.info.substr(4, 6);
+		trecord.id = trecord.info.substr(10, 3);
+		rList.push_back(trecord);
+	}
+
+	vector<record> r2 = rList, r3 = rList;
+	sort(rList.begin(), rList.end(), compare1);
+	sort(r2.begin(), r2.end(), compare2);
+	sort(r3.begin(), r3.end(), compare3);
+	char type;
+	string term;
+	for (int i = 0; i != reqNum; ++i)
+	{
+		std::cin >> type >> term;
+		cout << "Case " << caseCnt << ": " << type << " " << term << endl;
+		switch (type)
+		{
+		case'1':
+			print1(rList, term);/* term代表level */
+			break;
+		case'2':
+			print2(r2, term);
+			break;
+		case'3':
+			print3(r3, term);
+			break;
+		default:
+			break;
+		}
+		++caseCnt;
+	}
+
+#endif
+	return 0;
+}
+
+bool compare1(const record& r1, const record& r2)
+{
+	if (r1.level == r2.level)
+	{
+		if (r1.score == r2.score)
+		{
+			return r1.info < r2.info;
+		}
+		return r1.score > r2.score;
+	}
+	return r1.level < r2.level;
+}
+
+bool compare2(const record& r1, const record& r2)
+{
+	return r1.site > r2.site;
+}
+
+bool compare3(const record& r1, const record& r2)
+{
+	if (r1.date == r2.date)
+	{
+		return r1.site < r2.site;
+	}
+	return r1.date < r2.date;
+}
+
+bool compare4(const siteCnt& site1, const siteCnt& site2)
+{
+	if (site1.cnt == site2.cnt)
+	{
+		return site1.site < site2.site;
+	}
+	return site1.cnt > site2.cnt;
+}
+
+void print1(vector<record>& rList, const string& term)
+{
+	int flag = 0;
+	for (size_t i = 0; i != rList.size(); ++i)
+	{
+		if ((rList[i].level == term) && (flag == 0))
+		{
+			flag = 1;
+			while ((i != rList.size()) && (rList[i].level == term))
+			{
+				cout << rList[i].level << rList[i].site << rList[i].date << rList[i].id << " " << rList[i].score << endl;
+				++i;
+			}
+			return;
+		}
+		continue;
+	}
+	cout << "NA" << endl;
+}
+
+void print2(vector<record>& rList, const string& term)
+{
+	int flag = 0;
+	int tscore = 0, cnt = 0;
+
+	for (size_t i = 0; i != rList.size(); ++i)
+	{
+		if ((flag == 0) && (rList[i].site == term))
+		{
+			flag = 1;
+			while ((i != rList.size()) && (rList[i].site == term))
+			{
+				++cnt;
+				tscore += rList[i++].score;
+			}
+			cout << cnt << " " << tscore << endl;
+			return;
+		}
+		continue;
+	}
+	cout << "NA" << endl;
+}
+
+void print3(vector<record>& rList, const string& term)
+{
+	int flag = 0;
+	siteCnt curr;
+	vector<siteCnt> sList;
+	for (size_t i = 0; i != rList.size(); ++i)
+	{
+		if ((flag == 0) && (rList[i].date == term))
+		{
+			flag = 1;
+			while ((i != rList.size()) && rList[i].date == term)
+			{
+				if (rList[i].site != curr.site)/* 遇见新的题号 */
+				{
+					curr.site = rList[i].site;
+					curr.cnt = 0;
+				}
+
+				if (rList[i].site == curr.site)/* 处理当前的题号 */
+				{
+					++curr.cnt;
+				}
+				if ((i != rList.size() - 1) && (rList[i + 1].site != curr.site))/* 即将遇到新的题号 */
+				{
+					sList.push_back(curr);
+				}
+				if (i == rList.size() - 1)
+				{
+					sList.push_back(curr);
+					break;
+				}
+				++i;
+			}
+		}
+		continue;
+	}
+	if (flag)
+	{
+		sort(sList.begin(), sList.end(), compare4);
+		for (size_t i = 0; i != sList.size(); ++i)
+		{
+			cout << sList[i].site << " " << sList[i].cnt<<endl;
+		}
+	}
+	else
+	{
+		cout << "NA" << endl;
+	}
+}
