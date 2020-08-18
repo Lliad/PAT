@@ -11,7 +11,7 @@ using namespace std;
 struct Applicant {
     int id;
     int gradeE = 0, gradeI = 0;
-    double finalGrade = 0;
+    int finalGrade = 0;
 
     int rank;
 
@@ -24,6 +24,7 @@ struct School {
     int quota;
 
     vector<int> acceptStu;
+    int lastAccRank = 0;
 };
 
 void initSchool(vector<School>& school);
@@ -81,7 +82,7 @@ void initStu(vector<Applicant>& stu, const int& appNum, const int& choiceNum)
     {
         tstu.id = i;
         cin >> tstu.gradeE >> tstu.gradeI;
-        tstu.finalGrade = (tstu.gradeE + tstu.gradeI);
+        tstu.finalGrade = tstu.gradeE + tstu.gradeI;
         for (int j = 0; j != choiceNum; ++j)
         {
             cin >> temp;
@@ -143,13 +144,13 @@ void findSchool(vector<School>& school, vector<Applicant>& stu, const int& choic
             if (school[tempSchoolNum].stuCnt < school[tempSchoolNum].quota)
             {
                 school[tempSchoolNum].acceptStu.push_back(it->id);
+                school[tempSchoolNum].lastAccRank = it->rank;
                 ++school[tempSchoolNum].stuCnt;
                 break;
             }
             else
             {
-                int lastAcceptStu = school[tempSchoolNum].acceptStu.back();
-                if (it->rank == stu[lastAcceptStu].rank)
+                if (it->rank == school[tempSchoolNum].lastAccRank)
                 {
                     school[tempSchoolNum].acceptStu.push_back(it->id);
                     break;
