@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cstddef>
+
+using namespace std;
+
+struct Student {
+	string id;
+	int score, aRank = 0, lRank = 0, location = 0;
+};
+
+bool compare1(const Student& stu1, const Student& stu2);/* 给成绩排序，如果分数一样，按照id升序排列 */
+void givelRank(vector<Student>& stu, const int& stuCnt);
+void giveaRank(vector<Student>& stu);
+
+int main(int argc, char* argv[])
+{
+#if 1
+	int locaNum, stuNum = 0, stuCnt = 0;
+	cin >> locaNum;
+
+	Student tstu;
+	vector<Student> stu;
+	for (auto i = 0; i != locaNum; ++i)
+	{
+		cin >> stuNum;
+		for (auto j = 0; j != stuNum; ++j)
+		{
+			tstu.location = i + 1;
+			cin >> tstu.id >> tstu.score;
+			stu.push_back(tstu);
+		}
+		sort(stu.begin() + stuCnt, stu.end(), compare1);
+		givelRank(stu, stuCnt);
+		stuCnt += stuNum;
+	}
+
+	sort(stu.begin(), stu.end(), compare1);
+	giveaRank(stu);
+  
+  cout << stuCnt << endl;
+	for (auto& i : stu)
+	{
+		cout << i.id << " " << i.aRank + 1 << " " << i.location << " " << i.lRank + 1 << endl;
+	}
+	
+#endif
+	return 0;
+}
+
+bool compare1(const Student& stu1, const Student& stu2)
+{
+	return (stu1.score != stu2.score) ? (stu1.score > stu2.score) : (stu1.id < stu2.id);
+}
+
+void givelRank(vector<Student>& stu, const int& stuCnt)
+{
+	for (size_t i = 0; i != stu.size() - stuCnt; ++i)
+	{
+		stu[i + stuCnt].lRank = i;
+		if (i && (stu[i + stuCnt].score == stu[i + stuCnt - 1].score))
+		{
+			stu[i + stuCnt].lRank = stu[i + stuCnt - 1].lRank;
+		}
+	}
+}
+
+void giveaRank(vector<Student>& stu)
+{
+	for (size_t i = 0; i != stu.size(); ++i)
+	{
+		stu[i].aRank = i;
+		if (i && (stu[i].score == stu[i - 1].score))
+		{
+			stu[i].aRank = stu[i - 1].aRank;
+		}
+	}
+}
