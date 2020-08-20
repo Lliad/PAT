@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cstddef>
+
+using namespace std;
+
+struct Stu {
+	string id, name;
+	int score;
+};
+
+bool com1(const Stu& stu1, const Stu& stu2);
+bool com2(const Stu& stu1, const Stu& stu2);
+bool com3(const Stu& stu1, const Stu& stu2);
+
+int main(int argc, char* argv[])
+{
+#if 1
+	int stuNum;
+	char col;
+	cin >> stuNum >> col;
+
+	Stu tstu;
+	vector<Stu> stu;
+	for (auto i = 0; i != stuNum; ++i)
+	{
+		cin >> tstu.id >> tstu.name >> tstu.score;
+		stu.push_back(tstu);
+	}
+
+	switch (col)
+	{
+	case'1':
+		sort(stu.begin(), stu.end(), com1);
+		break;
+	case'2':
+		sort(stu.begin(), stu.end(), com2);
+		break;
+	case'3':
+		sort(stu.begin(), stu.end(), com3);
+		break;
+	default:
+		break;
+	}
+
+	for (auto& i : stu)
+	{
+		cout << i.id << " " << i.name << " " << i.score << endl;
+	}
+#endif
+
+	return 0;
+}
+
+bool com1(const Stu& stu1, const Stu& stu2)
+{
+	return stu1.id < stu2.id;
+}
+
+bool com2(const Stu& stu1, const Stu& stu2)
+{
+	if (stu1.name == stu2.name)
+	{
+		return stu1.id < stu2.id;
+	}
+	return stu1.name < stu2.name;
+}
+
+bool com3(const Stu& stu1, const Stu& stu2)
+{
+	if (stu1.score == stu2.score)
+	{
+		return stu1.id < stu2.id;
+	}
+	return stu1.score < stu2.score;
+}
+
