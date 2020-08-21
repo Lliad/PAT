@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cstddef>
+
+using namespace std;
+
+typedef long int L;
+
+bool compare(const L& l1, const L& l2)
+{
+	return l1 < l2;
+}
+
+int main(int argc, char* argv[])
+{
+#if 1
+	int len, tmp, alen = 0;
+	vector<L> vec;
+	for (auto idx = 0; idx != 2; ++idx) 
+	{
+		cin >> len;
+		for (int i = 0; i != len; ++i)
+		{
+			cin >> tmp;
+			vec.push_back(tmp);
+		}
+		alen += len;
+	}
+	sort(vec.begin(), vec.end(), compare);
+	
+	cout << vec[alen / 2];
+#endif
+	return 0;
+}
