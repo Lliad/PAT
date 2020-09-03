@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cstddef>
+
+using namespace std;
+
+struct stu {
+	int grade;
+	string id, name, gender;
+};
+
+bool compare(const stu& stu1, const stu& stu2)
+{
+	return stu1.grade < stu2.grade;
+}
+
+int main(int argc, char* argv[])
+{
+#if 1
+	int stuNum, flag = 0;
+	cin >> stuNum;
+
+	stu tstu;
+	vector<stu> mstu, fstu;
+	for (int i = 0; i != stuNum; ++i)
+	{
+		cin >> tstu.name >> tstu.gender >> tstu.id >> tstu.grade;
+		if (tstu.gender == "M")
+		{
+			mstu.push_back(tstu);
+		}
+		else
+		{
+			fstu.push_back(tstu);
+		}
+	}
+	sort(mstu.begin(), mstu.end(), compare);
+	sort(fstu.begin(), fstu.end(), compare);
+
+	if (!fstu.empty())
+	{
+		cout << fstu[fstu.size() - 1].name << " " << fstu[fstu.size() - 1].id << endl;
+	}
+	else
+	{
+		flag = 1;
+		cout << "Absent" << endl;
+	}
+	if (!mstu.empty())
+	{
+		cout << mstu[0].name << " " << mstu[0].id << endl;
+	}
+	else
+	{
+		flag = 1;
+		cout << "Absent" << endl;
+	}
+
+	if (!flag)
+	{
+		cout << fstu[fstu.size() - 1].grade - mstu[0].grade << endl;
+	}
+	else
+	{
+		cout << "NA" << endl;
+	}
+#endif
+	return 0;
+}
