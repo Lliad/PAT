@@ -1,83 +1,31 @@
-#include "head.h"
+#include <iostream>
+#include <string>
 
-bool isPrime(const unsigned long& val);
-string getStrVal(const string::iterator it1, const string::iterator it2);
-unsigned long strToNum(const string& str);
+using namespace std;
 
-int main(int argc, char* argv[])
+bool isPrime(int n) 
 {
-#if 1
-    int lenthOfTotal, lenthOfPrime;
-    string str;
-
-    cin >> lenthOfTotal >> lenthOfPrime;
-
-    cout << "Please input the total Num: ";
-    cin >> str;
-
-    if (str.size() == lenthOfTotal)
-    {
-        for (auto it = str.begin(); it != str.end() - lenthOfPrime; ++it)
-        {
-            string strVal = getStrVal(it, it + lenthOfPrime);
-            unsigned long val = strToNum(strVal);
-            if (isPrime(val))
-            {
-                cout << "The first prime in " << str << " is ";
-                cout << val << endl;
-                return 0;
-            }
-        }
-        cout << "404 not found" << endl;
-    }
-#endif
-
-    return 0;
-}
-
-string getStrVal(const string::iterator it1, const string::iterator it2)
-{
-    string str = "";
-    if (it1 != it2)
-    {
-        for (auto idx = it1; idx != it2; ++idx)
-        {
-            str += *idx;
-        }
-    }
-    return str;
-}
-
-unsigned long strToNum(const string& str)
-{
-    unsigned long val = 0;
-    for (auto i = 0; i != str.size(); ++i)
-    {
-        val += (str[i] - int('0')) * pow(10, str.size() - 1 - i);
-    }
-
-    return val;
-}
-
-bool isPrime(const unsigned long &val)
-{
-    if (val <= 2 || val == 3)
-    {
-        return true;
-    }
-
-    if (val % 6 != 1 && val % 6 != 5)
-    {
-        return false;
-    }
-
-    for (int i = 5; i < sqrt(val); i += 6)
-    {
-        if (val % i == 0 || val % (i + 2) == 0)
-        {
-            return false;
-        }
-    }
-
+    if (n == 0 || n == 1) return false;
+    for (int i = 2; i * i <= n; i++)
+        if (n % i == 0) return false;
     return true;
+}
+
+int main() 
+{
+    int l, k;
+    string s;
+    cin >> l >> k >> s;
+    for (int i = 0; i <= l - k; i++) 
+    {
+        string t = s.substr(i, k);
+        int num = stoi(t);
+        if (isPrime(num)) 
+        {
+            cout << t;
+            return 0;
+        }
+    }
+    cout << "404\n";
+    return 0;
 }
