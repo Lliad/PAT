@@ -1,0 +1,52 @@
+https://leetcode-cn.com/problems/add-to-array-form-of-integer/submissions/
+
+class Solution {
+public:
+    vector<int> addToArrayForm(vector<int>& A, int K) {
+        vector<int> vecK;
+        while(K!=0){
+            vecK.push_back(K%10);
+            K/=10;
+        }
+        reverse(A.begin(),A.end());
+        int len1=A.size();
+        int len2=vecK.size();
+        int len;
+        if(len1>len2){
+            for(auto i=0;i!=len1-len2;++i){
+                vecK.push_back(0);
+            }
+            len=len1;
+        }
+        else if(len1<len2){
+            for(auto i=0;i!=len2-len1;++i){
+                A.push_back(0);
+            }
+            len=len2;
+        }
+        else{
+            len=len1;
+        }
+
+        int sum=0;
+        int flag=0;
+        vector<int> res;
+        for(size_t i=0;i!=len;++i){
+            sum=A[i]+vecK[i]+flag;
+            if(sum>9){
+                res.push_back(sum-10);
+                flag=1;
+            }
+            else{
+                res.push_back(sum);
+                flag=0;
+            }
+            
+            if(i==len-1&&sum>9){
+                res.push_back(1);
+            }
+        }
+        reverse(res.begin(),res.end());
+        return res;
+    }
+};
