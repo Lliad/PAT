@@ -1,0 +1,16 @@
+int numEquivDominoPairs(vector<vector<int>>& dominoes) {
+	vector<int> tmp(100, 0);
+	for (auto it = dominoes.begin(); it != dominoes.end(); ++it) {
+		++tmp[max((*it)[0],(*it)[1])*10+ min((*it)[0], (*it)[1])];
+	}
+
+	int res = 0;
+	for (auto i = 0; i != tmp.size(); ++i) {
+		if (tmp[i] > 1) {
+			res += ((tmp[i] - 1)*tmp[i]) / 2;
+		}
+	}
+	return res;
+}
+
+https://leetcode-cn.com/problems/number-of-equivalent-domino-pairs/submissions/
