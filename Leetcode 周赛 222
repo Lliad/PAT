@@ -1,0 +1,30 @@
+#problem 1
+bool com(vector<int> box1, vector<int> box2) {
+	return box1[1] > box2[1];
+}
+int maximumUnits(vector<vector<int>>& boxTypes, int truckSize) {
+	sort(boxTypes.begin(), boxTypes.end(), com);
+	int cnt = 0;
+	int tCnt = 0;
+	while (tCnt <= truckSize && cnt < boxTypes.size()) {
+		tCnt += boxTypes[cnt][0];
+		++cnt;
+	}
+	int res = 0;
+	if (tCnt <= truckSize) {
+		for (auto i = 0; i != boxTypes.size(); ++i) {
+			res += boxTypes[i][0] * boxTypes[i][1];
+		}
+		return res;
+	}
+	else {
+		tCnt = 0;
+		for (auto i = 0; i != cnt - 1; ++i) {
+			res += boxTypes[i][0] * boxTypes[i][1];
+			tCnt += boxTypes[i][0];
+		}
+		res += (truckSize - tCnt)*boxTypes[cnt - 1][1];
+
+		return res;
+	}
+}
