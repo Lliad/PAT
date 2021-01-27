@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+	int pos = 0;
+	for (auto it = nums.begin(); it != nums.end(); ++it) {
+		++pos;
+		if (accumulate(nums.begin(), it, *it) == accumulate(it, nums.end(), 0)) {
+			return pos-1;
+		}
+	}
+    return -1;
+}
+};
+
+https://leetcode-cn.com/problems/find-pivot-index/submissions/
