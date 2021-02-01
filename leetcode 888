@@ -1,0 +1,51 @@
+class Solution {
+#define MAX_LEN 100001
+public:
+   vector<int> fairCandySwap(vector<int>& A, vector<int>& B) {
+	int totalA = 0;
+	int totalB = 0;
+	vector<int> cntA(MAX_LEN, 0);
+	vector<int> cntB(MAX_LEN, 0);
+	for (auto i : A) {
+		totalA += i;
+		++cntA[i];
+	}
+	for (auto i : B) {
+		totalB += i;
+		++cntB[i];
+	}
+	vector<int> ans(2, 0);
+	if (totalA > totalB) {
+		int res = (totalA - totalB) / 2;
+		for (int i = 0; i != MAX_LEN; ++i) {
+			if (cntB[i] != 0 && cntA[i + res] != 0) {
+				ans[0] = i + res;
+				ans[1] = i;
+				return ans;
+			}
+		}
+	}
+	else if (totalA < totalB) {
+		int res = (totalB - totalA) / 2;
+		for (int i = 0; i != MAX_LEN; ++i) {
+			if (cntA[i] != 0 && cntB[i + res] != 0) {
+				ans[0] = i;
+				ans[1] = i + res;
+				return ans;
+			}
+		}
+	}
+	else if (totalA == totalB) {
+		for (int i = 0; i != MAX_LEN; ++i) {
+			if (cntA[i] != 0 && cntB[i] != 0) {
+				ans[0] = i;
+				ans[1] = i;
+				return ans;
+			}
+		}
+	}
+	return ans;
+}
+};
+
+https://leetcode-cn.com/problems/fair-candy-swap/submissions/
