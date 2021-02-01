@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> cnt(26, 0);
+	int left = 0;
+	int wide = 0;
+	int maxLetter = 0;
+	for (auto i = 0; i != s.size(); ++i) {
+		++cnt[s[i] - 'A'];
+		maxLetter = max(cnt[s[i] - 'A'], maxLetter);
+		while (i - left + 1 - maxLetter > k) {
+			--cnt[s[left] - 'A'];
+			++left;
+		}
+		wide = max(wide, i - left + 1);
+	}
+	return wide;
+    }
+};
+
+https://leetcode-cn.com/problems/longest-repeating-character-replacement/
