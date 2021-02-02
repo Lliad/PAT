@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<double> medianSlidingWindow(vector<int>& nums, int k) {
+        vector<double> res;
+        vector<double> tmp(k);
+        for(int i = 0; i != nums.size() - k + 1; ++i){
+            for( int j = 0; j != k; ++j){
+                tmp[j] = nums[j + i];
+            }
+            sort(tmp.begin(), tmp.end());
+            if(k % 2 == 0){
+                res.push_back(double(tmp[k / 2] + tmp[k / 2 - 1]) / 2);
+            }
+            else{
+                res.push_back(tmp[k / 2]);
+            }
+        }
+        return res;
+    }
+};
+
+https://leetcode-cn.com/problems/sliding-window-median/submissions/
